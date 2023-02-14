@@ -89,16 +89,5 @@ func (p *HomePage) Post(c echo.Context) error {
 		return redirect(c, homePageURI, Param{Key: "error", Value: internalServerError})
 	}
 
-	// result := p.db.WithContext(c.Request().Context()).Create(&message)
-	// if result.Error != nil {
-	// 	msg := "failed to insert user into db"
-	// 	logrus.
-	// 		WithError(result.Error).
-	// 		Error(msg)
-	//
-	// 	return redirect(c, homePageURI, Param{Key: "error", Value: internalServerError})
-	// }
-
 	return redirect(c, ss.URL)
-	// return redirect(c, homePageURI)
 }

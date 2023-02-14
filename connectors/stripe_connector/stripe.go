@@ -63,12 +63,14 @@ func (s *StripeConnector) StartCheckoutSession(product Product) (*stripe.Checkou
 					TaxBehavior: stripe.String("inclusive"),
 					ProductData: &stripe.CheckoutSessionLineItemPriceDataProductDataParams{
 						Description: &product.Description,
-						Metadata:    product.MetaData,
 						Name:        &product.Name,
 					},
 				},
 				Quantity: stripe.Int64(1),
 			},
+		},
+		PaymentIntentData: &stripe.CheckoutSessionPaymentIntentDataParams{
+			Metadata: product.MetaData,
 		},
 		Mode:         stripe.String(string(stripe.CheckoutSessionModePayment)),
 		SuccessURL:   stripe.String(s.successURL),

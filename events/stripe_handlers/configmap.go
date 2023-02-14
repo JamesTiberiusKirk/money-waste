@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/JamesTiberiusKirk/money-waste/models"
 	"github.com/sirupsen/logrus"
 	"github.com/stripe/stripe-go/v74"
 	"gorm.io/gorm"
@@ -64,9 +65,10 @@ func NewConfigMap(db *gorm.DB) *ConfigMap {
 	}
 }
 
-// const (
-// errNoMessageFound = "no message found in payment intent"
-// )
+const (
+	errNoMessageFound = "no message found in payment intent"
+	messageMetaTag    = "message"
+)
 
 // handlePaymentIntentSuccedded handles stripe payment_intent.succeeded event
 func (e *EventHandlers) handlePaymentIntentSuccedded(ctx context.Context, data stripe.EventData) error {
@@ -75,21 +77,6 @@ func (e *EventHandlers) handlePaymentIntentSuccedded(ctx context.Context, data s
 	if err != nil {
 		return fmt.Errorf("error unmarshaling event data: %w", err)
 	}
-
-	// pj, _ := json.MarshalIndent(paymentIntent, "", "    ")
-	// fmt.Printf("%+v\n", string(pj))
-
-	fmt.Printf("META: %+v\n", paymentIntent.Metadata)
-
-	// tx := models.Transaction{
-	// 	Amount:  float64(paymentIntent.Amount),
-	// 	Message: message,
-	// }
-	//
-	// result := e.db.WithContext(ctx).Create(&tx)
-	// if result.Error != nil {
-	// 	return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
-	// }
 
 	return nil
 }
@@ -102,26 +89,6 @@ func (e *EventHandlers) handleCheckoutSessionComplete(ctx context.Context, data 
 		return fmt.Errorf("error unmarshaling event data: %w", err)
 	}
 
-	// pj, _ := json.MarshalIndent(checkoutSession, "", "    ")
-	// fmt.Printf("%+v\n", string(pj))
-
-	fmt.Printf("META: %+v\n", checkoutSession.Metadata)
-
-	// message, ok := checkoutSession.Metadata["message"]
-	// if !ok {
-	// 	return fmt.Errorf(errNoMessageFound)
-	// }
-
-	// tx := models.Transaction{
-	// 	Amount:  float64(checkoutSession.Amount),
-	// 	Message: message,
-	// }
-	//
-	// result := e.db.WithContext(ctx).Create(&tx)
-	// if result.Error != nil {
-	// 	return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
-	// }
-
 	return nil
 }
 
@@ -133,25 +100,22 @@ func (e *EventHandlers) handleChargeSuccedded(ctx context.Context, data stripe.E
 		return fmt.Errorf("error unmarshaling event data: %w", err)
 	}
 
-	// pj, _ := json.MarshalIndent(charge, "", "    ")
-	// fmt.Printf("%+v\n", string(pj))
+	tx := models.Transaction{
+		Amount:         float64(charge.Amount) / 100,
+		Message:        charge.Metadata[messageMetaTag],
+		StripeChargeID: charge.ID,
+		PaymentStatus:  models.ChargeStatus(charge.Status),
+		Live:           charge.Livemode,
+	}
 
-	fmt.Printf("META: %+v\n", charge.Metadata)
+	if charge.BillingDetails != nil {
+		tx.Email = charge.BillingDetails.Email
+	}
 
-	// message, ok := checkoutSession.Metadata["message"]
-	// if !ok {
-	// 	return fmt.Errorf(errNoMessageFound)
-	// }
-
-	// tx := models.Transaction{
-	// 	Amount:  float64(checkoutSession.Amount),
-	// 	Message: message,
-	// }
-	//
-	// result := e.db.WithContext(ctx).Create(&tx)
-	// if result.Error != nil {
-	// 	return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
-	// }
+	result := e.db.WithContext(ctx).Create(&tx)
+	if result.Error != nil {
+		return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
+	}
 
 	return nil
 }
@@ -163,26 +127,6 @@ func (e *EventHandlers) handlePaymentIntentCreated(ctx context.Context, data str
 	if err != nil {
 		return fmt.Errorf("error unmarshaling event data: %w", err)
 	}
-
-	// pj, _ := json.MarshalIndent(paymentIntent, "", "    ")
-	// fmt.Printf("%+v\n", string(pj))
-
-	fmt.Printf("META: %+v\n", paymentIntent.Metadata)
-
-	// message, ok := checkoutSession.Metadata["message"]
-	// if !ok {
-	// 	return fmt.Errorf(errNoMessageFound)
-	// }
-
-	// tx := models.Transaction{
-	// 	Amount:  float64(checkoutSession.Amount),
-	// 	Message: message,
-	// }
-	//
-	// result := e.db.WithContext(ctx).Create(&tx)
-	// if result.Error != nil {
-	// 	return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
-	// }
 
 	return nil
 }

@@ -24,10 +24,16 @@
                   Date
                 </th>
                 <th class="px-6 py-2 text-xs text-gray-500">
+                  Email 
+                </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
                   Message
                 </th>
                 <th class="px-6 py-2 text-xs text-gray-500">
                   Amount
+                </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  Stripe Charge ID 
                 </th>
               </tr>
             </thead>
@@ -41,10 +47,27 @@
                     {{ $m.CreatedAt.Format "2006-01-02 15:04" }} 
                   </td>
                   <td class="px-6 py-4">
+                    {{ $m.Email }}
+                  </td>
+                  <td class="px-6 py-4">
                     {{ $m.Message }}
                   </td>
                   <td class="px-6 py-4">
-                    {{ $m.Amount }}
+                    £ {{ $m.Amount }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ if eq false $m.Live }}
+                      Test:
+                      <a
+                          href="https://dashboard.stripe.com/test/payments{{ $m.StripeChargeID }}">
+                        {{ $m.StripeChargeID }}
+                      </a>
+                    {{ else }}
+                      <a
+                          href="https://dashboard.stripe.com/payments{{ $m.StripeChargeID }}">
+                        {{ $m.StripeChargeID }}
+                      </a>
+                    {{ end }}
                   </td>
                 </tr>
               {{ end }}
