@@ -1,0 +1,13 @@
+# You can specify more than one package
+packages:
+  - path: "github.com/JamesTiberiusKirk/money-waste/models"
+    output_path: "./site/page/templates/tstypes/baseTypes.ts"
+    indent: "  "
+  - path: "github.com/JamesTiberiusKirk/money-waste/site/page"
+    output_path: "./site/page/templates/tstypes/types.ts"
+    indent: "  "
+    frontmatter: |
+      import * as models from './baseTypes'
+    include_struct_comment: "TsType"
+    type_mappings:
+      models.User: models.User

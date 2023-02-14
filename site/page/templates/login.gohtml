@@ -1,0 +1,52 @@
+{{ define "content" }}
+
+<div class="flex justify-center">
+  <div class="py-6 px-8  mt-20 bg-white rounded shadow-xl">
+    <div>
+      <h1
+        class="mb-4 text-4xl font-extrabold leading-none md:text-3xl lg:text-4xl">
+        Login
+      </h1>
+
+      {{ if .meta.URLError }}
+        <p>Error: {{ .meta.URLError }}</p>
+      {{ end }}
+
+      {{ if .meta.Success }}
+        <p>Success: {{ .meta.Success }}</p>
+      {{ end }}
+    </div>
+
+    <form method="POST">
+      <div class="mb-6">
+        <input 
+           name="email"
+           id="email"
+           placeholder="Email"
+           type="text"
+           class="w-full border border-gray-300 py-2 pl-3 rounded mt-2 outline-none
+                     block focus:ring-indigo-600 :ring-indigo-600"
+           />
+
+        <input 
+           name="password"
+           id="password"
+           placeholder="Password"
+           type="password"
+           class="w-full border border-gray-300 py-2 pl-3 rounded mt-2 outline-none
+                         block focus:ring-indigo-600 :ring-indigo-600"
+           />
+      </div>
+      <div class="flex items-center justify-between">
+        <button type="submit"
+                class="cursor-pointer py-2 px-4 block mt-6 bg-indigo-500 text-white
+                        font-bold w-full text-center rounded"
+                type="button">
+         Login 
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{ end }}

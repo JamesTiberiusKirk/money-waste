@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      a {
+        @apply text-blue-600 ;
+      }
+    </style>
+  </head>
+  <body>
+    {{ include "framework/framework.gohtml" }}
+
+    <div class="h-screen flex flex-col">
+      <header class="bg-white sticky top-0 z-50">
+        <nav>
+          <div>
+            <div class="flex justify-between h-16 px-10 shadow items-center">
+              <div class="flex items-center space-x-8">
+                <h1 class="text-xl lg:text-2xl font-bold cursor-pointer">Money Waste</h1>
+                <div class="md:flex justify-around space-x-4">
+                  <a href="{{ .routes.site.homePage }}" class="hover:text-indigo-600 text-gray-700">Home</a>
+                  <a href="{{ .routes.site.aboutPage }}" class="hover:text-indigo-600 text-gray-700">About</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <div class="flex-1 bg-gray-200" id="page_content">
+        {{ template "content" . }}
+      </div>
+
+
+      <footer class="bg-white sticky bottom-0 z-50">
+        <div class="foot-row">
+          <h1>DEBUG!! Available routes</h1>
+          {{ range $key, $value := .routes.site }}
+            <a href={{$value}}>{{$key}}</a>
+            <br/>
+          {{ end }}
+        </div>
+      </footer>
+
+    </div>
+
+    </div>
+
+    {{ includeJs "framework/framework.js" }}
+
+  </body>
+</html>
+
+
+
+

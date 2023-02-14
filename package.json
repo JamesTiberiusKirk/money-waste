@@ -1,0 +1,24 @@
+{
+  "name": "money-waste",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "spa:install": "(cd site/spa/react_portal && npm install)",
+    "spa:build": "(cd site/spa/react_portal && npm run build)",
+    "spa:run": "(cd site/spa/react_portal && npm start)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesTiberiusKirk/money-waste.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JamesTiberiusKirk/money-waste/issues"
+  },
+  "homepage": "https://github.com/JamesTiberiusKirk/money-waste#readme",
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}

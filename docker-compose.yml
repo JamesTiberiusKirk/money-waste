@@ -1,0 +1,32 @@
+version: "3.5"
+
+services:
+  # money-waste:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./Dockerfile.dev
+  #   environment:
+  #     - DEBUG=true
+  #     - DB_NAME=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=postgress
+  #     - DB_PASS=password
+  #     - HTTP_PORT=3000
+  #     - HTTP_ROOT_PATH=/
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - db
+  #   restart: unless-stopped
+
+  db:
+      image: 'postgres:latest'
+      ports:
+        - 5432:5432
+      environment:
+        POSTGRES_USER: postgres 
+        POSTGRES_PASSWORD: password 
+        POSTGRES_DB: money-waste 
+      volumes:
+        - ./.db-mount:/var/lib/postgresql/data/

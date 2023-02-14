@@ -1,0 +1,15 @@
+    <script>
+      let _data =    {{.data }}
+      let _meta =    {{.meta }}
+      let _auth =    {{.auth}}
+      let _routes =  {{.routes}}
+
+      console.log("DATA: ",   _data)
+      console.log("META: ",   _meta)
+      console.log("AUTH: ",   _auth)
+      console.log("ROUTES: ", _routes)
+
+      // This is a hack to get the compiled js to work without browser errors 
+      const exports = {"__esModule": true}
+    </script>
+

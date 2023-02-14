@@ -1,0 +1,59 @@
+{{ define "content" }} 
+
+<div class="pt-10 pb-10 container flex justify-center mx-auto">
+  <div class="flex flex-col">
+    {{ if .error }} 
+      <h2 class="mb-4 text-4xl font-extrabold leading-none md:text-2xl lg:text-3xl">
+        Server error: {{ .error }}
+      </h2>
+    {{ end }}
+
+    {{ if .data.Messages }}
+      <h2 class="mb-4 text-4xl font-extrabold leading-none md:text-2xl lg:text-3xl">
+        Money wasted:
+      </h2>
+      <div class="w-full">
+        <div class="border-b border-gray-200 shadow">
+          <table class="divide-y divide-green-400 ">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  ID
+                </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  Date
+                </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  Message
+                </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-300">
+              {{ range $m := .data.Messages }}
+                <tr class="">
+                  <td class="px-6 py-4 text-sm text-gray-500">
+                    {{ $m.ID }}
+                  </td>
+                  <td class="px-6 py-4  whitespace-nowrap">
+                    {{ $m.CreatedAt.Format "2006-01-02 15:04" }} 
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ $m.Message }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ $m.Amount }}
+                  </td>
+                </tr>
+              {{ end }}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</div>
+
+{{ end }}

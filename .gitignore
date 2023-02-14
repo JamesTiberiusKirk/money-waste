@@ -1,0 +1,3 @@
+.db-mount/
+node_modules/
+.env
