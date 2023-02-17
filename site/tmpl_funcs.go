@@ -1,10 +1,9 @@
 package site
 
 import (
-	"encoding/json"
+	"fmt"
 )
 
-func stringyfyJSON(object any) string {
-	stringObject, _ := json.Marshal(object)
-	return string(stringObject)
+func formatFloatToCurrency(value float64) string {
+	return fmt.Sprintf("%.2f", value)
 }

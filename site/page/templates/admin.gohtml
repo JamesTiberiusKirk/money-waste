@@ -53,18 +53,22 @@
                     {{ $m.Message }}
                   </td>
                   <td class="px-6 py-4">
-                    £ {{ $m.Amount }}
+                    £ {{ formatFloatToCurrency $m.Amount }}
                   </td>
                   <td class="px-6 py-4">
                     {{ if eq false $m.Live }}
                       Test:
                       <a
-                          href="https://dashboard.stripe.com/test/payments{{ $m.StripeChargeID }}">
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href="https://dashboard.stripe.com/test/payments/{{ $m.StripeChargeID }}">
                         {{ $m.StripeChargeID }}
                       </a>
                     {{ else }}
                       <a
-                          href="https://dashboard.stripe.com/payments{{ $m.StripeChargeID }}">
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href="https://dashboard.stripe.com/payments/{{ $m.StripeChargeID }}">
                         {{ $m.StripeChargeID }}
                       </a>
                     {{ end }}

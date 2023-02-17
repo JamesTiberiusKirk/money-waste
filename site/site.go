@@ -64,7 +64,7 @@ func NewSite(e *echo.Echo, rootSitePath string, db *gorm.DB,
 			"no_frame": "no_frame.gohtml",
 		},
 		tmplFuncs: template.FuncMap{
-			"stringify": stringyfyJSON,
+			"formatFloatToCurrency": formatFloatToCurrency,
 		},
 		routes: map[string]server.RoutesMap{
 			"site": {},
