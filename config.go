@@ -23,8 +23,9 @@ type Config struct {
 		RootAPIPath  string `env:"HTTP_ROOT_API_PATH"`
 	}
 	Stripe struct {
-		Public string `env:"STRIPE_PUBLIC_KEY"`
-		Secret string `env:"STRIPE_SECRET_KEY"`
+		Public           string `env:"STRIPE_PUBLIC_KEY"`
+		Secret           string `env:"STRIPE_SECRET_KEY"`
+		WebhookSignature string `env:"STIPE_WEBHOOK_SIG"`
 	}
 	SessionSecret string `env:"SESSION_SECRET"`
 	SignupSecret  string `env:"SIGNUP_SECRET"`

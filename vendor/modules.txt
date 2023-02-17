@@ -69,6 +69,7 @@ github.com/sirupsen/logrus
 github.com/stripe/stripe-go/v74
 github.com/stripe/stripe-go/v74/checkout/session
 github.com/stripe/stripe-go/v74/form
+github.com/stripe/stripe-go/v74/webhook
 # github.com/valyala/bytebufferpool v1.0.0
 ## explicit
 github.com/valyala/bytebufferpool

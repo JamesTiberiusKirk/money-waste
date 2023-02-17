@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ChargeStatus string
 
@@ -12,10 +16,11 @@ const (
 
 type Transaction struct {
 	gorm.Model
-	StripeChargeID string `gorm:"uniqueIndex"`
-	PaymentStatus  ChargeStatus
-	Message        string
-	Amount         float64
-	Email          string
-	Live           bool
+	StripeChargeID  string `gorm:"uniqueIndex"`
+	PaymentStatus   ChargeStatus
+	TransactionTime time.Time
+	Message         string
+	Amount          float64
+	Email           string
+	Live            bool
 }

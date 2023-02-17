@@ -15,24 +15,27 @@ import (
 type API struct {
 	rootAPIPath    string
 	publicRoutes   []*route.Route
-	authedRoutes   []*route.Route
+	stripeWebhooks []*route.Route
 	echoGroup      *echo.Group
 	sessionManager *session.Manager
 	routes         server.RoutesMap
+	stripeSig      string
 }
 
 // NewAPI new api instance.
 func NewAPI(group *echo.Group, rootAPIPath string, db *gorm.DB,
-	sesessionManager *session.Manager, stripeEventHandler *stripehandlers.ConfigMap) *API {
+	sesessionManager *session.Manager, stripeEventHandler *stripehandlers.ConfigMap,
+	stripeSig string) *API {
 	return &API{
-		rootAPIPath: rootAPIPath,
-		publicRoutes: []*route.Route{
+		rootAPIPath:  rootAPIPath,
+		publicRoutes: []*route.Route{},
+		stripeWebhooks: []*route.Route{
 			route.NewStripeWebhookRoute(stripeEventHandler),
 		},
-		authedRoutes:   []*route.Route{},
 		echoGroup:      group,
 		sessionManager: sesessionManager,
 		routes:         server.RoutesMap{},
+		stripeSig:      stripeSig,
 	}
 }
 
@@ -44,7 +47,7 @@ func (a *API) Serve() {
 	}))
 
 	a.mapRoutes(&a.publicRoutes)
-	a.mapRoutes(&a.authedRoutes, sessionAuthMiddleware(a.sessionManager))
+	a.mapRoutes(&a.stripeWebhooks, stripeSignatureMiddleware(a.stripeSig))
 }
 
 // GetRoutes returns available routes from this server.

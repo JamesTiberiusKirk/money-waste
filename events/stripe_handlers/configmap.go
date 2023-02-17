@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/JamesTiberiusKirk/money-waste/models"
 	"github.com/sirupsen/logrus"
@@ -57,10 +58,7 @@ func NewConfigMap(db *gorm.DB) *ConfigMap {
 	return &ConfigMap{
 		events: events,
 		handlers: map[StripeEventType]func(context.Context, stripe.EventData) error{
-			CheckoutSessionCompletes: events.handleCheckoutSessionComplete,
-			ChargeSuccedded:          events.handleChargeSuccedded,
-			PaymentIntentSuccedded:   events.handlePaymentIntentSuccedded,
-			PaymentIntentCreated:     events.handlePaymentIntentCreated,
+			ChargeSuccedded: events.handleChargeSuccedded,
 		},
 	}
 }
@@ -69,28 +67,6 @@ const (
 	errNoMessageFound = "no message found in payment intent"
 	messageMetaTag    = "message"
 )
-
-// handlePaymentIntentSuccedded handles stripe payment_intent.succeeded event
-func (e *EventHandlers) handlePaymentIntentSuccedded(ctx context.Context, data stripe.EventData) error {
-	var paymentIntent stripe.PaymentIntent
-	err := json.Unmarshal(data.Raw, &paymentIntent)
-	if err != nil {
-		return fmt.Errorf("error unmarshaling event data: %w", err)
-	}
-
-	return nil
-}
-
-// handleCheckoutSessionComplete handles stripe checkout.session.complete event
-func (e *EventHandlers) handleCheckoutSessionComplete(ctx context.Context, data stripe.EventData) error {
-	var checkoutSession stripe.CheckoutSession
-	err := json.Unmarshal(data.Raw, &checkoutSession)
-	if err != nil {
-		return fmt.Errorf("error unmarshaling event data: %w", err)
-	}
-
-	return nil
-}
 
 // handleChargeSuccedded handles stripe charge.succeeded event
 func (e *EventHandlers) handleChargeSuccedded(ctx context.Context, data stripe.EventData) error {
@@ -101,11 +77,12 @@ func (e *EventHandlers) handleChargeSuccedded(ctx context.Context, data stripe.E
 	}
 
 	tx := models.Transaction{
-		Amount:         float64(charge.Amount) / 100,
-		Message:        charge.Metadata[messageMetaTag],
-		StripeChargeID: charge.ID,
-		PaymentStatus:  models.ChargeStatus(charge.Status),
-		Live:           charge.Livemode,
+		Amount:          float64(charge.Amount) / 100,
+		Message:         charge.Metadata[messageMetaTag],
+		StripeChargeID:  charge.ID,
+		PaymentStatus:   models.ChargeStatus(charge.Status),
+		Live:            charge.Livemode,
+		TransactionTime: time.Unix(charge.Created, 0),
 	}
 
 	if charge.BillingDetails != nil {
@@ -115,17 +92,6 @@ func (e *EventHandlers) handleChargeSuccedded(ctx context.Context, data stripe.E
 	result := e.db.WithContext(ctx).Create(&tx)
 	if result.Error != nil {
 		return fmt.Errorf("error unable to commit transition to db: %w", result.Error)
-	}
-
-	return nil
-}
-
-// handlePaymentIntentCreated handles stripe charge.succeeded event
-func (e *EventHandlers) handlePaymentIntentCreated(ctx context.Context, data stripe.EventData) error {
-	var paymentIntent stripe.PaymentIntent
-	err := json.Unmarshal(data.Raw, &paymentIntent)
-	if err != nil {
-		return fmt.Errorf("error unmarshaling event data: %w", err)
 	}
 
 	return nil

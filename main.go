@@ -26,7 +26,7 @@ func main() {
 	stripeEventHandler := stripehandlers.NewConfigMap(db)
 
 	apiServer := api.NewAPI(e.Group(config.HTTP.RootAPIPath), config.HTTP.RootAPIPath, db,
-		sessionManager, stripeEventHandler)
+		sessionManager, stripeEventHandler, config.Stripe.WebhookSignature)
 	siteServer := site.NewSite(e, config.HTTP.RootSitePath, db, sessionManager, config.Debug,
 		config.SignupSecret, stripeConnector)
 
