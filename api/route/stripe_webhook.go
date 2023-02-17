@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	stripeWebhookAPIRoute = "/stripe/stripe_webhooks"
+	stripeWebhookAPIRoute = "/stripe/webhooks"
 )
 
 // UserRoute user route dependency struct.
